@@ -1,0 +1,27 @@
+﻿@page "/mongotest"
+@rendermode InteractiveServer
+@using Clubies.Services
+@inject MongoDbService MongoDb
+
+<h3>Test MongoDB Connection</h3>
+
+<button @onclick="TestConnection">Test Database Connection</button>
+
+<p>@status</p>
+
+@code {
+    private string status = "Not tested";
+
+    private async Task TestConnection()
+    {
+        try
+        {
+            await MongoDb.TestConnection();
+            status = "Successfully connected to MongoDB";
+        }
+        catch (Exception e)
+        {
+            status = $"MongoDB Connection failed: {e.Message}";
+        }
+    }
+}

@@ -29,7 +29,7 @@ builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
     return client.GetDatabase(databaseName);
 });
 
-builder.Services.AddSingleton<MongoDbService>();
+builder.Services.AddSingleton<MongoDbTestService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

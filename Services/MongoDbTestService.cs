@@ -3,11 +3,11 @@ using MongoDB.Bson;
 
 namespace Clubies.Services
 {
-    public class MongoDbService
+    public class MongoDbTestService
     {
         private readonly IMongoDatabase database;
 
-        public MongoDbService(IMongoDatabase database)
+        public MongoDbTestService(IMongoDatabase database)
         {
             this.database = database;
         }

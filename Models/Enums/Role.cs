@@ -2,5 +2,6 @@
 {
     public enum Role
     {
+        // This is an enum.
     }
 }

@@ -1,5 +1,44 @@
-﻿<h3>CreateAccount</h3>
+﻿@page "/create-account"
+@rendermode InteractiveServer
+@using Clubies.Models
+
+<h3>CreateAccount</h3>
+
+<div class="registration-form">
+    <EditForm Model="NewUser" FormName="AddGameForm" OnValidSubmit="AddUser">
+	    <DataAnnotationsValidator />
+	    <ValidationSummary />
+        <div class="registration-field">
+            <label for="FirstName">First Name</label>
+            <InputText @bind-Value="NewUser.FirstName" placeholder="Peppa"></InputText>
+        </div>
+        <div class="registration-field">
+            <label for="LastName">Last Name</label>
+            <InputText @bind-Value="NewUser.LastName" placeholder="Pig"></InputText>
+        </div>
+        <div class="registration-field">
+            <label for="Email">Email</label>
+            <InputText @bind-Value="NewUser.Email" placeholder="PeppaPig@gmail.com"></InputText>
+        </div>
+        <div class="registration-field">
+            <label for="Password">Password</label>
+            <InputText @bind-Value="NewUser.Password" placeholder="Password123!"></InputText>
+        </div>
+        <div class="registration-field">
+            <label for="PhoneNumber">Phone Number (Optional)</label>
+            <InputText @bind-Value="NewUser.PhoneNumber" placeholder="123-456-7890"></InputText>
+        </div>
+        <div class="registration-field">
+            <input type="submit" value="Register" />
+        </div>
+    </EditForm>
+</div>
 
 @code {
+    public User NewUser { get; set; } = new User();
 
+    private void AddUser()
+    {
+        
+    }
 }

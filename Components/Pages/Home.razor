@@ -1,7 +1,18 @@
 ﻿@page "/"
+@layout HomeLayout
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Clubyiees</h1>
 
-Welcome to your new app.
+Welcome to Clubyiees!.
+
+<button class="btn btn-secondary" @onclick="">Calendar</button>
+<button class="btn btn-secondary" @onclick="">Clubs To Join</button>
+<button class="btn btn-secondary" @onclick="">Your Clubs</button>
+
+@*This is a button that only shows up for people who can create clubs*@
+@*if (user == owner) @*Change variable names to match what they're actually supposed to be*@
+@*{ 
+    <button class="btn btn-secondary" @onclick="">Create A Club</button>
+}*@

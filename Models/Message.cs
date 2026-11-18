@@ -1,6 +1,17 @@
-﻿namespace Clubies.Models
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace Clubies.Models
 {
     public class Message
     {
+        [BsonId]
+        public ObjectId Id { get; set; }
+        [BsonId]
+        public ObjectId ChannelId { get; set; }
+        [BsonId]
+        public ObjectId SenderId { get; set; }
+        public string Content { get; set; }
+        public DateTime TimeStamp { get; set; }
     }
 }

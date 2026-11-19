@@ -16,5 +16,6 @@ namespace Clubies.Models
         public List<ObjectId>? Managers { get; set; }
         public string? ClubPhoto{ get; set; }
         public List<Tags>? ClubTags { get; set; }
+        public List<ObjectId>? Channels { get; set; }
     }
 }

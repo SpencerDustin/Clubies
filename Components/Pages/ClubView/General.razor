@@ -1,5 +1,29 @@
-﻿<h3>General</h3>
+﻿@page "/club"
+@using Models
+@using Models.Enums
+
+<PageTitle>Game Details</PageTitle>
+
+<h3>General Club View</h3>
+
+@if (Club == null)
+{
+    <h3>Club does not exist...</h3>
+}
+else
+{
+    <div class="club">
+        <img src="@Club.ClubPhoto" class="club-image" alt="@Club.Name Image Art"/>
+
+        <h2>@Club.Name</h2>
+        <p><b>Description: </b>@Club.Description</p>
+    </div>
+
+    <button></button>
+}
+
+
 
 @code {
-
+    public Club? Club { get; set; }
 }

@@ -1,32 +1,38 @@
 ﻿@page "/create-account"
 @rendermode InteractiveServer
+@inject NavigationManager Navigation
+@using System.Text.RegularExpressions
 @using Clubies.Models
 
 <h3>CreateAccount</h3>
 
 <div class="registration-form">
-    <EditForm Model="NewUser" FormName="AddGameForm" OnValidSubmit="AddUser">
+    <EditForm Model="NewUser" FormName="AddGameForm" OnValidSubmit="ValidateUser">
 	    <DataAnnotationsValidator />
 	    <ValidationSummary />
         <div class="registration-field">
+            <label for="Username">Username</label>
+            <InputText @bind-Value="NewUser.Username" placeholder="PepMaster007" autocomplete="off"></InputText>
+        </div>
+        <div class="registration-field">
             <label for="FirstName">First Name</label>
-            <InputText @bind-Value="NewUser.FirstName" placeholder="Peppa"></InputText>
+            <InputText @bind-Value="NewUser.FirstName" placeholder="Peppa" autocomplete="off"></InputText>
         </div>
         <div class="registration-field">
             <label for="LastName">Last Name</label>
-            <InputText @bind-Value="NewUser.LastName" placeholder="Pig"></InputText>
+            <InputText @bind-Value="NewUser.LastName" placeholder="Pig" autocomplete="off"></InputText>
         </div>
         <div class="registration-field">
             <label for="Email">Email</label>
-            <InputText @bind-Value="NewUser.Email" placeholder="PeppaPig@gmail.com"></InputText>
+            <InputText @bind-Value="NewUser.Email" placeholder="PeppaPig@gmail.com" autocomplete="off"></InputText>
         </div>
         <div class="registration-field">
             <label for="Password">Password</label>
-            <InputText @bind-Value="NewUser.Password" placeholder="Password123!"></InputText>
+            <InputText @bind-Value="NewUser.Password" placeholder="Password123!" autocomplete="off" type="password"></InputText>
         </div>
         <div class="registration-field">
             <label for="PhoneNumber">Phone Number (Optional)</label>
-            <InputText @bind-Value="NewUser.PhoneNumber" placeholder="123-456-7890"></InputText>
+            <InputText @bind-Value="NewUser.PhoneNumber" placeholder="123-456-7890" autocomplete="off"></InputText>
         </div>
         <div class="registration-field">
             <input type="submit" value="Register" />
@@ -35,10 +41,42 @@
 </div>
 
 @code {
-    public User NewUser { get; set; } = new User();
+	public List<User> UserDataBase { get; set; } = new List<User>();
+	public User NewUser { get; set; } = new User() { IsRegistering = true };
 
-    private void AddUser()
+	private void AddUser()
+	{
+		UserDataBase.Add(NewUser);
+		Console.WriteLine("Added User");
+        Navigation.NavigateTo("/Login");
+	}
+
+	public void ValidateUser()
+	{
+		bool ValidUsername = !string.IsNullOrWhiteSpace(NewUser.Username);
+		bool ValidFirstName = !string.IsNullOrWhiteSpace(NewUser.FirstName);
+		bool ValidlastName = !string.IsNullOrWhiteSpace(NewUser.LastName);
+		bool ValidEmail = Regex.IsMatch(NewUser.Email, @"^\w+@(student\.)?neumont\.edu$");
+		bool ValidPassword = ValidatePassword();
+		bool validPhoneNumber = true;
+		bool UsernameIsFree = UserDataBase.Where(u => u.Username == NewUser.Username).FirstOrDefault() == null;
+		bool EmailIsFree = UserDataBase.Where(u => u.Email == NewUser.Email).FirstOrDefault() == null;
+		if (!string.IsNullOrWhiteSpace(NewUser.PhoneNumber))
+			validPhoneNumber = Regex.IsMatch(NewUser.PhoneNumber, @"^(?=(?:\D*\d){7,15}\D*$)\+?[\d\s().-]+$");
+
+		if (ValidUsername && ValidFirstName && ValidlastName && ValidEmail && ValidPassword && validPhoneNumber && UsernameIsFree)
+			AddUser();
+
+		if (!UsernameIsFree)
+			Console.WriteLine("Username already exists");
+	}
+
+    public bool ValidatePassword()
     {
-        
+        bool containsCapitalCharacter = Regex.IsMatch(NewUser.Password, @"[A-Z]");
+        bool containsNumber = Regex.IsMatch(NewUser.Password, @"\d");
+        bool containsSpecialCharacter = Regex.IsMatch(NewUser.Password, @"[!@#$%^&*]");
+        bool passwordHasGoodRange = NewUser.Password.Length >= 6 && NewUser.Password.Length <= 100;
+        return containsCapitalCharacter && containsNumber && containsSpecialCharacter && passwordHasGoodRange;
     }
 }

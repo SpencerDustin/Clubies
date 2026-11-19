@@ -12,6 +12,8 @@
 
 	- **DotNetEnv**: Loads .env key-value pairs into environmental variables
 
+	- **MongoDB.EntityFrameworkCore**: Allows easy communication with MongoDB Atlas.
+
 ## Prerequisites (download these)
 
 	- Git

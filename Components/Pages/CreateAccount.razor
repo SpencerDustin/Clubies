@@ -1,8 +1,10 @@
 ﻿@page "/create-account"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
+@inject IHashingService Hashing
 @using System.Text.RegularExpressions
 @using Clubies.Models
+@using Clubies.Services.Interfaces
 
 <h3>CreateAccount</h3>
 
@@ -13,26 +15,38 @@
         <div class="registration-field">
             <label for="Username">Username</label>
             <InputText @bind-Value="NewUser.Username" placeholder="PepMaster007" autocomplete="off"></InputText>
+            @usernameError
+
         </div>
         <div class="registration-field">
             <label for="FirstName">First Name</label>
             <InputText @bind-Value="NewUser.FirstName" placeholder="Peppa" autocomplete="off"></InputText>
+            @firstNameError
         </div>
         <div class="registration-field">
             <label for="LastName">Last Name</label>
             <InputText @bind-Value="NewUser.LastName" placeholder="Pig" autocomplete="off"></InputText>
+            @lastNameError
         </div>
         <div class="registration-field">
             <label for="Email">Email</label>
-            <InputText @bind-Value="NewUser.Email" placeholder="PeppaPig@gmail.com" autocomplete="off"></InputText>
+            <InputText @bind-Value="NewUser.Email" placeholder="pPig@studen.neumont.edu" autocomplete="off"></InputText>
+            @emailError
         </div>
         <div class="registration-field">
             <label for="Password">Password</label>
             <InputText @bind-Value="NewUser.Password" placeholder="Password123!" autocomplete="off" type="password"></InputText>
+            @passwordError
+        </div>
+        <div class="registration-field">
+            <label for="PasswordConfirmation">Confirm Password</label>
+            <InputText @bind-Value="NewUser.ConfirmationPassword" placeholder="Password123!" autocomplete="off" type="password"></InputText>
+            @confirmPasswordError
         </div>
         <div class="registration-field">
             <label for="PhoneNumber">Phone Number (Optional)</label>
             <InputText @bind-Value="NewUser.PhoneNumber" placeholder="123-456-7890" autocomplete="off"></InputText>
+            @phoneError
         </div>
         <div class="registration-field">
             <input type="submit" value="Register" />
@@ -43,33 +57,42 @@
 @code {
 	public List<User> UserDataBase { get; set; } = new List<User>();
 	public User NewUser { get; set; } = new User() { IsRegistering = true };
+	public string usernameError = "";
+	public string firstNameError = "";
+	public string lastNameError = "";
+	public string emailError = "";
+	public string passwordError = "";
+	public string confirmPasswordError = "";
+	public string phoneError = "";
 
 	private void AddUser()
 	{
+		NewUser.Password = Hashing.GetHashString(NewUser.Password);
+		Console.WriteLine("Hashed password: " + NewUser.Password);
 		UserDataBase.Add(NewUser);
-		Console.WriteLine("Added User");
+        Console.WriteLine("Added User");
         Navigation.NavigateTo("/Login");
-	}
+    }
 
-	public void ValidateUser()
-	{
-		bool ValidUsername = !string.IsNullOrWhiteSpace(NewUser.Username);
-		bool ValidFirstName = !string.IsNullOrWhiteSpace(NewUser.FirstName);
-		bool ValidlastName = !string.IsNullOrWhiteSpace(NewUser.LastName);
-		bool ValidEmail = Regex.IsMatch(NewUser.Email, @"^\w+@(student\.)?neumont\.edu$");
-		bool ValidPassword = ValidatePassword();
-		bool validPhoneNumber = true;
-		bool UsernameIsFree = UserDataBase.Where(u => u.Username == NewUser.Username).FirstOrDefault() == null;
-		bool EmailIsFree = UserDataBase.Where(u => u.Email == NewUser.Email).FirstOrDefault() == null;
-		if (!string.IsNullOrWhiteSpace(NewUser.PhoneNumber))
-			validPhoneNumber = Regex.IsMatch(NewUser.PhoneNumber, @"^(?=(?:\D*\d){7,15}\D*$)\+?[\d\s().-]+$");
+    public void ValidateUser()
+    {
+        bool ValidUsername = !string.IsNullOrWhiteSpace(NewUser.Username);
+        bool ValidFirstName = !string.IsNullOrWhiteSpace(NewUser.FirstName);
+        bool ValidLastName = !string.IsNullOrWhiteSpace(NewUser.LastName);
+        bool ValidEmail = Regex.IsMatch(NewUser.Email, @"^\w+@(student\.)?neumont\.edu$");
+        bool ValidPassword = ValidatePassword();
+        bool validPhoneNumber = true;
+        bool UsernameIsFree = UserDataBase.Where(u => u.Username == NewUser.Username).FirstOrDefault() == null;
+        bool EmailIsFree = UserDataBase.Where(u => u.Email == NewUser.Email).FirstOrDefault() == null;
+        if (!string.IsNullOrWhiteSpace(NewUser.PhoneNumber))
+            validPhoneNumber = Regex.IsMatch(NewUser.PhoneNumber, @"^(?=(?:\D*\d){7,15}\D*$)\+?[\d\s().-]+$");
 
-		if (ValidUsername && ValidFirstName && ValidlastName && ValidEmail && ValidPassword && validPhoneNumber && UsernameIsFree)
-			AddUser();
+        if (ValidUsername && ValidFirstName && ValidLastName && ValidEmail && ValidPassword && validPhoneNumber && UsernameIsFree)
+            AddUser();
+        else
+            ShowErrors(ValidUsername, ValidFirstName, ValidLastName, ValidEmail, validPhoneNumber, UsernameIsFree);
+    }
 
-		if (!UsernameIsFree)
-			Console.WriteLine("Username already exists");
-	}
 
     public bool ValidatePassword()
     {
@@ -77,6 +100,31 @@
         bool containsNumber = Regex.IsMatch(NewUser.Password, @"\d");
         bool containsSpecialCharacter = Regex.IsMatch(NewUser.Password, @"[!@#$%^&*]");
         bool passwordHasGoodRange = NewUser.Password.Length >= 6 && NewUser.Password.Length <= 100;
-        return containsCapitalCharacter && containsNumber && containsSpecialCharacter && passwordHasGoodRange;
+        bool passwordMathces = NewUser.Password == NewUser.ConfirmationPassword;
+        passwordError = "";
+        if (!containsCapitalCharacter || !containsNumber || !containsSpecialCharacter || !passwordHasGoodRange)
+            passwordError = "Password needs:";
+        if (!containsCapitalCharacter)
+            passwordError += "\n\tAt least 1 capital";
+        if (!containsNumber)
+            passwordError += "\n\tAt least 1 number";
+        if (!containsSpecialCharacter)
+            passwordError += "\n\tAt least 1 special character";
+        if (!passwordHasGoodRange)
+            passwordError += "\n\tHas to contain between 8-100 characters";
+        if (!passwordMathces)
+            confirmPasswordError = "Passwords do not match";
+        return containsCapitalCharacter && containsNumber && containsSpecialCharacter && passwordHasGoodRange && passwordMathces;
+    }
+
+    private void ShowErrors(bool validUsername, bool validFirstName, bool validLastName, bool validEmail, bool validPhoneNumber, bool usernameIsFree)
+    {
+        usernameError = validUsername ? "" : "Username can't be empty";
+        usernameError += usernameIsFree ? "" : ((validUsername ? "" : "\n") + "Username is already taken");
+        firstNameError = validFirstName ? "" : "First name can't be empty";
+        lastNameError = validLastName? "" : "Last name can't be empty";
+        emailError = validEmail? "" : "Email does not fit the format of neumont email";
+        phoneError = validPhoneNumber ? "" : "Phone number is not a proper phone number";
+
     }
 }

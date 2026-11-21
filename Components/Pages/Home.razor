@@ -1,18 +1,57 @@
 ﻿@page "/"
+
+@inject NavigationManager Navigation
 @layout HomeLayout
+@using Clubies.Models
 
 <PageTitle>Home</PageTitle>
 
 <h1>Clubyiees</h1>
 
-Welcome to Clubyiees!.
+<p>Welcome to Clubyiees!</p>
 
-<button class="btn btn-secondary" @onclick="">Calendar</button>
-<button class="btn btn-secondary" @onclick="">Clubs To Join</button>
-<button class="btn btn-secondary" @onclick="">Your Clubs</button>
+<div class="nav-wrapper"> 
+    <NavLink class="spacing btn btn-secondary" href="calandar">
+        Calendar
+    </NavLink>
+</div>
+<br/>
+
+<div>
+    <NavLink class="btn btn-secondary" href="all-clubs">
+        Clubs To Join
+    </NavLink>
+</div> 
+<br/>
+
+<div>
+    <NavLink class="btn btn-secondary" href="clubs-joined">
+        My Clubs
+    </NavLink>
+</div>
+<br/>
+
+@if (currUser == null)
+{
+    <div>
+        <NavLink class="btn btn-secondary" href="Login">
+            Login/Create Account
+        </NavLink>
+    </div>
+    <br/>
+}
 
 @*This is a button that only shows up for people who can create clubs*@
-@*if (user == owner) @*Change variable names to match what they're actually supposed to be*@
-@*{ 
-    <button class="btn btn-secondary" @onclick="">Create A Club</button>
-}*@
+@if (currUser!.PhoneNumber != null) @*Only shows up if User has verified Phone Number*@
+{ 
+    <div>
+        <NavLink class="btn btn-secondary" href="create-club">
+            Create Club
+        </NavLink>
+    </div>
+    <br/>
+}
+
+@code {
+    
+}

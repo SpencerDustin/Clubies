@@ -7,7 +7,6 @@ namespace Clubies.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        [BsonId]
         public ObjectId SenderId { get; set; }
         public string Content { get; set; }
         public DateTime TimeStamp { get; set; }

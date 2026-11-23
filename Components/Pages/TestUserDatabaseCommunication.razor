@@ -1,0 +1,23 @@
+﻿@using MongoDB.Bson
+@inject IMessageService MessageService
+@page "/testuser"
+@rendermode InteractiveServer
+
+<h3>TestUserDatabaseCommunication</h3>
+
+<button @onclick="AddUser">Add Test User</button>
+
+@code {
+    public async void AddUser()
+    {
+        Message user = new Message
+        {
+            Id = ObjectId.GenerateNewId(),
+            SenderId = ObjectId.GenerateNewId(),
+            Content = "This is a cool message",
+            TimeStamp = DateTime.Now
+        };
+
+        await MessageService.CreateMessage(user);
+    }
+}

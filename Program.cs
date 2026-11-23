@@ -1,6 +1,8 @@
 using Clubies.Components;
 using MongoDB.Driver;
 using Clubies.Services;
+using Clubies.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 using Clubies.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,8 +34,16 @@ builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
 
 builder.Services.AddSingleton<MongoDbTestService>();
 
-// Add Hashing service
-builder.Services.AddSingleton<IHashingService, HashingService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IClubService, ClubService>();
+builder.Services.AddScoped<IClubEventService, ClubEventService>();
+builder.Services.AddScoped<IChannelService, ChannelService>();
+
+builder.Services.AddDbContextFactory<MongoDbContext>(options =>
+{
+    options.UseMongoDB(connectionString, databaseName);
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

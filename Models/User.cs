@@ -1,4 +1,4 @@
-﻿using MongoDB.Bson;
+
 using System.ComponentModel.DataAnnotations;
 using VideoGameLibrary.Components.Models;
 

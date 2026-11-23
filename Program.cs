@@ -1,6 +1,7 @@
 using Clubies.Components;
 using MongoDB.Driver;
 using Clubies.Services;
+using Clubies.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
 });
 
 builder.Services.AddSingleton<MongoDbTestService>();
+
+// Add Hashing service
+builder.Services.AddSingleton<IHashingService, HashingService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

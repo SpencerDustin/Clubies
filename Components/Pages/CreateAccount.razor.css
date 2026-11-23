@@ -1,0 +1,9 @@
+/* CSS for CreateAccount component */
+.registration-form{
+    display: block;
+    justify-self: center;
+}
+
+.registration-field{
+    justify-self: center;
+}

@@ -1,5 +1,51 @@
-﻿<h3>Login</h3>
+﻿@page "/Login"
+@rendermode InteractiveServer
+@inject IHashingService Hashing
+@using Clubies.Models
+@using Clubies.Services.Interfaces
+
+
+<h3>Login</h3>
+
+<div class="registration-form">
+    <EditForm Model="NewUser" FormName="AddGameForm" OnValidSubmit="ValidateLogin">
+	    <DataAnnotationsValidator />
+	    <ValidationSummary />
+        <div class="registration-field">
+            <label for="Username">Username</label>
+            <InputText @bind-Value="NewUser.Username" placeholder="PepMaster007" autocomplete="off"></InputText>
+        </div>
+        <div class="registration-field">
+            <label for="Password">Password</label>
+            <InputText @bind-Value="NewUser.Password" placeholder="Password123!" autocomplete="off" type="password"></InputText>
+        </div>
+        <div class="registration-field">
+            <input type="submit" value="Login" />
+        </div>
+    </EditForm>
+</div>
 
 @code {
+    public List<User> UserDataBase { get; set; } = new List<User>() { new User() { Username = "PepMaster007", Password = "8744AE43E5DAE0ACD05CA1F2C309852D49DEF638036F86D092CA431FA52B9BCA" } };
+    public User NewUser { get; set; } = new User() { IsRegistering = false };
 
+    public void ValidateLogin()
+    {
+        User? loginAttempt = UserDataBase.Where(u => u.Username == NewUser.Username).FirstOrDefault();
+        if (loginAttempt != null)
+        {
+            NewUser.Password = Hashing.GetHashString(NewUser.Password);
+            if (loginAttempt.Password == NewUser.Password)
+                UserLogin();
+            else
+                NewUser.Password = "";
+        }
+            
+
+    }
+
+    public void UserLogin()
+    {
+        Console.WriteLine($"You have logged in as {NewUser.Username}");
+    }
 }

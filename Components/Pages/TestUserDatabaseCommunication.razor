@@ -1,5 +1,5 @@
 ﻿@using MongoDB.Bson
-@inject IMessageService MessageService
+@inject IUserService UserService
 @page "/testuser"
 @rendermode InteractiveServer
 
@@ -10,14 +10,18 @@
 @code {
     public async void AddUser()
     {
-        Message user = new Message
+        User user = new User
         {
             Id = ObjectId.GenerateNewId(),
-            SenderId = ObjectId.GenerateNewId(),
-            Content = "This is a cool message",
-            TimeStamp = DateTime.Now
+            Username = "Correct Name",
+            Password = "secret",
+            FirstName = "Peeper",
+            LastName = "pig",
+            ProfilePicture = "test",
+            Email = "coolguy@edu.neu",
+            PhoneNumber = "435"
         };
 
-        await MessageService.CreateMessage(user);
+        await UserService.CreateUser(user);
     }
 }

@@ -1,8 +1,9 @@
 ﻿@page "/club"
-@using Models
-@using Models.Enums
+@using Clubies.Models
+@using MongoDB.Bson
+@rendermode InteractiveServer
 
-<PageTitle>Game Details</PageTitle>
+<PageTitle>Club Details</PageTitle>
 
 <h3>General Club View</h3>
 
@@ -13,17 +14,52 @@
 else
 {
     <div class="club">
-        <img src="@Club.ClubPhoto" class="club-image" alt="@Club.Name Image Art"/>
 
-        <h2>@Club.Name</h2>
-        <p><b>Description: </b>@Club.Description</p>
+        <div class="club-banner-container">
+
+            <img src="/Images/defaultbanner.jpg"
+                 class="club-banner"
+                 alt="@Club.Name Banner Art" />
+
+        
+            <img src="/Images/defaultclubimage.jpg"
+                 class="club-image"
+                 alt="@Club.Name Image Art" />
+
+        </div>
+
+        <div class="club-info">
+
+            <h2>@Club.Name</h2>
+            <p><b>Description: </b>@Club.Description</p>
+
+            @if (NotSighnedIn)
+            {
+                <p class="signin-message">Login in to join this club</p>
+            } else
+            {
+                <button type="button" class="club-join-button">Join</button> 
+            }
+
+        </div>
+
     </div>
-
-    <button></button>
 }
-
-
 
 @code {
     public Club? Club { get; set; }
+
+    public bool NotSighnedIn { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        Club = new Club()
+        {
+            Id = ObjectId.GenerateNewId(),
+            Name = "testclub",
+            Description = "test bro",
+            Owner = ObjectId.GenerateNewId()
+        };
+
+    }
 }

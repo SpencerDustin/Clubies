@@ -1,5 +1,180 @@
-﻿<h3>Members</h3>
+﻿@page "/club/member"
+@using Clubies.Models
+@using MongoDB.Bson
+@rendermode InteractiveServer
+
+<PageTitle>Club Details</PageTitle>
+
+<h3>Member Club View</h3>
+
+@if (Club == null)
+{
+    <h3>Club does not exist...</h3>
+}
+else
+{
+    <div class="club">
+
+        <div class="club-banner-container">
+
+            <img src="/Images/defaultbanner.jpg"
+                 class="club-banner"
+                 alt="@Club.Name Banner Art" />
+
+        
+            <img src="/Images/defaultclubimage.jpg"
+                 class="club-image"
+                 alt="@Club.Name Image Art" />
+
+        </div>
+
+        <div class="club-info">
+
+            <h2>@Club.Name</h2>
+            <p><b>Description: </b>@Club.Description</p>
+        </div>
+
+    </div>
+
+    <div class="club-buttons">
+
+        <button class="club-buttons-indivdual" @onclick="ViewMembers">View Members</button>
+        
+        <button class="club-buttons-indivdual" @onclick="ViewManagers">View Managers</button>
+
+        <button class="club-buttons-indivdual" @onclick="ViewEvents">View Events</button>
+
+        <button class="club-buttons-indivdual" @onclick="ViewAnnouncements">View Announcements</button>
+
+    </div>
+
+    @if (ShowMembers)
+    {
+        <h3>Club Members</h3>
+
+        @if (Club.Members != null && Club.Members.Count > 0)
+        {
+            @foreach (ObjectId member in Club.Members)
+            {
+                <p>@member</p>
+            }
+        }
+        else
+        {
+            <p>No Members Found</p>
+        }
+    }
+
+    @if (ShowManagers)
+    {
+        <h3>Club Managers</h3>
+
+        @if (Club.Managers != null && Club.Managers.Count > 0)
+        {
+            @foreach (ObjectId managers in Club.Managers)
+            {
+                <p>@managers</p>
+            }
+        }
+        else
+        {
+            <p>No Managers Found</p>
+        }
+    }
+
+    @if (ShowEvents)
+    {
+        <h3>Club Events</h3>
+
+        @if (Club.ClubEvents != null && Club.ClubEvents.Count > 0)
+        {
+            @foreach (ObjectId events in Club.ClubEvents)
+            {
+                <p>@events</p>
+            }
+        }
+        else
+        {
+            <p>No Events Found</p>
+        }
+    }
+
+    @if (ShowAnnouncements)
+    {
+        <h3>Club Announcements</h3>
+
+        @if (Club.Channels != null && Club.Channels.Count > 0)
+        {
+            @foreach (ObjectId announcements in Club.Channels)
+            {
+                <p>@announcements</p>
+            }
+        }
+        else
+        {
+            <p>No Announcements Found</p>
+        }
+    }
+}
 
 @code {
+    public Club? Club { get; set; }
+
+    public bool ShowMembers { get; set; } = false;
+
+    public bool ShowManagers { get; set; } = false;
+
+    public bool ShowEvents { get; set; } = false;
+
+    public bool ShowAnnouncements { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        Club = new Club()
+        {
+            Id = ObjectId.GenerateNewId(),
+            Name = "testclub",
+            Description = "test bro",
+            Owner = ObjectId.GenerateNewId(),
+            Members = new List<ObjectId>(),
+            Managers = new List<ObjectId>(),
+            ClubEvents = new List<ObjectId>(),
+            Channels = new List<ObjectId>(),
+        };
+
+    }
+
+    private void ViewMembers()
+    {
+        ShowMembers = true;
+        ShowManagers = false;
+        ShowEvents = false;
+        ShowAnnouncements = false;
+    }
+
+    private void ViewManagers()
+    {
+        ShowMembers = false;
+        ShowManagers = true;
+        ShowEvents = false;
+        ShowAnnouncements = false;
+    }
+
+    private void ViewEvents()
+    {
+        ShowMembers = false;
+        ShowManagers = false;
+        ShowEvents = true;
+        ShowAnnouncements = false;
+    }
+
+    private void ViewAnnouncements()
+    {
+        ShowMembers = false;
+        ShowManagers = false;
+        ShowEvents = false;
+        ShowAnnouncements = true;
+    }
+
 
 }

@@ -1,5 +1,29 @@
-﻿<h3>Search</h3>
+﻿@page "/searh"
+@using Clubies.Models
+@using MongoDB.Bson
+@rendermode InteractiveServer
+
+<PageTitle>Club Search</PageTitle>
+@* 
+<h3>Search Club</h3>
+<div class="search-body">
+    <Input @bind-Value="SearchTerm" @bind-Value:event="oninput" placeholder="Search by title" />
+
+    <Input @bind-Value="GenreFilter" @bind-Value:event="oninput" placeholder="Search by genre" />
+
+    <Input @bind-Value="PlatformFilter" @bind-Value:event="oninput" placeholder="Search by platform" />
+
+    <InputSelect TValue="GameRating?" placeholder="Select By Rating" @bind-Value="RatingFilter">
+        <option value="">All Rating</option>
+        @foreach (GameRating rating in Enum.GetValues<GameRating>())
+        {
+            <option value=@rating>@rating</option>
+        }
+    </InputSelect>
+
+    <button type="button" class="btn btn-danger" @onclick="ClearFilters">Clear All Filters</button>
+</div> *@
 
 @code {
-
+    private List<Club> ClubCollection { get; set; }
 }

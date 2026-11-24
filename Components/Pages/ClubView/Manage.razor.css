@@ -1,0 +1,74 @@
+/* CSS for Manage component */
+
+/* Main club container */
+.club {
+    max-width: 1000px;
+    margin: 30px auto;
+    background-color: white;
+    border: 1px solid;
+    border-block-color: black
+}
+
+/* Banner image */
+.club-banner-container {
+    position: relative;
+    margin-bottom: 65px;
+}
+
+.club-banner {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Club profile picture */
+.club-image {
+    position: absolute;
+    bottom: -55px;
+    left: 30px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 1px solid;
+    border-block-color: black;
+    background-color: white;
+}
+
+/* Club name and description */
+.club-info {
+    padding: 0 30px 25px;
+}
+
+    .club-info h2 {
+        margin-bottom: 10px;
+        font-size: 26px;
+    }
+
+    .club-info p {
+        line-height: 1.5;
+    }
+
+/* Buttons */
+.club-buttons {
+    background-color: lightgoldenrodyellow;
+    color: black;
+    border: 2px solid;
+    border-block-color: black;
+    padding: 15px 25px;
+    font-weight: bold;
+}
+
+.club-buttons-indivdual {
+    background-color: yellow;
+    color: black;
+    border: 2px solid;
+    border-block-color: black;
+    padding: 15px 25px;
+    font-weight: bold;
+}
+
+.club-join-button:hover {
+    background-color: #084d91;
+}
+

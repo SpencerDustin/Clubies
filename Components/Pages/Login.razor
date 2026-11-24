@@ -1,6 +1,7 @@
 ﻿@page "/Login"
 @rendermode InteractiveServer
 @inject IHashingService Hashing
+@inject IUserService UserService
 @using Clubies.Models
 @using Clubies.Services.Interfaces
 
@@ -26,26 +27,25 @@
 </div>
 
 @code {
-    public List<User> UserDataBase { get; set; } = new List<User>() { new User() { Username = "PepMaster007", Password = "8744AE43E5DAE0ACD05CA1F2C309852D49DEF638036F86D092CA431FA52B9BCA" } };
     public User NewUser { get; set; } = new User() { IsRegistering = false };
 
-    public void ValidateLogin()
+    public async Task ValidateLogin()
     {
-        User? loginAttempt = UserDataBase.Where(u => u.Username == NewUser.Username).FirstOrDefault();
+        User? loginAttempt = await UserService.GetByUsername(NewUser.Username);
         if (loginAttempt != null)
         {
             NewUser.Password = Hashing.GetHashString(NewUser.Password);
             if (loginAttempt.Password == NewUser.Password)
-                UserLogin();
+                await UserLogin(loginAttempt);
             else
                 NewUser.Password = "";
         }
-            
+
 
     }
 
-    public void UserLogin()
+    public async Task UserLogin(User user)
     {
-        Console.WriteLine($"You have logged in as {NewUser.Username}");
+        Console.WriteLine($"You have logged in as {user.Username}");
     }
 }

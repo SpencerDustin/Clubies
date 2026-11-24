@@ -40,6 +40,22 @@ namespace Clubies.Services
             return await context.Users.FindAsync(id);
         }
 
+        // READ BY USERNAME
+        public async Task<User?> GetByUsername(string username)
+        {
+            using var context = contextFactory.CreateDbContext();
+
+            return await context.Users.Where(u => u.Username == username).SingleOrDefaultAsync();
+        }
+
+        // READ BY EMAIL
+        public async Task<User?> GetByUserEmail(string email)
+        {
+            using var context = contextFactory.CreateDbContext();
+
+            return await context.Users.Where(u => u.Email == email).SingleOrDefaultAsync();
+        }
+
         // UPDATE
         public async Task UpdateUser(User user)
         {

@@ -1,7 +1,57 @@
 ﻿@page "/"
 
+@inject NavigationManager Navigation
+@layout HomeLayout
+@using Clubies.Models
+
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Clubyiees</h1>
 
-Welcome to your new app.
+<p>Welcome to Clubyiees!</p>
+
+<div class="nav-wrapper"> 
+    <NavLink class="spacing btn btn-secondary" href="calandar">
+        Calendar
+    </NavLink>
+</div>
+<br/>
+
+<div>
+    <NavLink class="btn btn-secondary" href="all-clubs">
+        Clubs To Join
+    </NavLink>
+</div> 
+<br/>
+
+<div>
+    <NavLink class="btn btn-secondary" href="clubs-joined">
+        My Clubs
+    </NavLink>
+</div>
+<br/>
+
+@if (currUser == null)
+{
+    <div>
+        <NavLink class="btn btn-secondary" href="Login">
+            Login/Create Account
+        </NavLink>
+    </div>
+    <br/>
+}
+
+@*This is a button that only shows up for people who can create clubs*@
+@if (currUser!.PhoneNumber != null) @*Only shows up if User has verified Phone Number*@
+{ 
+    <div>
+        <NavLink class="btn btn-secondary" href="create-club">
+            Create Club
+        </NavLink>
+    </div>
+    <br/>
+}
+
+@code {
+    
+}

@@ -12,6 +12,8 @@
 
 	- **DotNetEnv**: Loads .env key-value pairs into environmental variables
 
+	- **MongoDB.EntityFrameworkCore**: Allows easy communication with MongoDB Atlas.
+
 ## Prerequisites (download these)
 
 	- Git
@@ -33,9 +35,18 @@
 
 		- Examples are feature/**name**, bugfix/**bug**, etc.
 
+# Folder Structure
+
+	- Contexts: Grabs information from the database.
+
+	- Servives: Uses repository information to get derived information or function as the middleman with the frontend.
+
+
 # GitHub Instructions
 
 1. git switch -c "branch/name"
 2. git add "file"
 3. git commit -m "what changed"
 4. git push
+
+

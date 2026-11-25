@@ -4,12 +4,38 @@
 @inject IUserService UserService
 @using Clubies.Models
 @using Clubies.Services.Interfaces
+@using Microsoft.AspNetCore.Components
 
 
 <h3>Login</h3>
 
 <div class="registration-form">
-    <EditForm Model="NewUser" FormName="AddGameForm" OnValidSubmit="ValidateLogin">
+    <form action="/login" method="post">
+        <AntiforgeryToken/>
+
+        @if(LoginFailed)
+        {
+            <p class="text-danger">Invalid username or password</p>
+        }
+
+        <div class="registration-field">
+            <label for="Username">Username</label>
+            <input id="Username" name="username" placeholder="PepMaster007" autocomplete="off"/>
+        </div>
+
+        <div class="registration-field">
+            <label for="Password">Password</label>
+            <input id="Password" name="password" placeholder="Password123!" autocomplete="off" type="password" />
+        </div>
+
+        <div class="registration-field">
+            <input type="submit" value="Login" />
+        </div>
+    </form>
+
+
+    @* OLD LOGIN *@
+    @* <EditForm Model="NewUser" FormName="AddGameForm" OnValidSubmit="ValidateLogin">
 	    <DataAnnotationsValidator />
 	    <ValidationSummary />
         <div class="registration-field">
@@ -23,29 +49,35 @@
         <div class="registration-field">
             <input type="submit" value="Login" />
         </div>
-    </EditForm>
+    </EditForm> *@
 </div>
+
 
 @code {
     public User NewUser { get; set; } = new User() { IsRegistering = false };
 
-    public async Task ValidateLogin()
-    {
-        User? loginAttempt = await UserService.GetByUsername(NewUser.Username);
-        if (loginAttempt != null)
-        {
-            NewUser.Password = Hashing.GetHashString(NewUser.Password);
-            if (loginAttempt.Password == NewUser.Password)
-                await UserLogin(loginAttempt);
-            else
-                NewUser.Password = "";
-        }
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "failed")]
+    public bool LoginFailed { get; set; } = false;
 
+    // public async Task ValidateLogin()
+    // {
+    //     User? loginAttempt = await UserService.GetByUsername(NewUser.Username);
+    //     if (loginAttempt != null)
+    //     {
+    //         bool validUser = await UserService.ValidateLogin(loginAttempt, NewUser.Password);
 
-    }
+    //         if (validUser)
+    //             await UserLogin(loginAttempt);
+    //         else
+    //             NewUser.Password = "";
+    //     }
+    // }
 
-    public async Task UserLogin(User user)
-    {
-        Console.WriteLine($"You have logged in as {user.Username}");
-    }
+    // public async Task UserLogin(User user)
+    // {
+        
+
+    //     Console.WriteLine($"You have logged in as {user.Username}");
+    // }
 }

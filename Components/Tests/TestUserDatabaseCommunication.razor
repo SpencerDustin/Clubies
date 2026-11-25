@@ -1,0 +1,27 @@
+﻿@using MongoDB.Bson
+@inject IUserService UserService
+@page "/testuser"
+@rendermode InteractiveServer
+
+<h3>TestUserDatabaseCommunication</h3>
+
+<button @onclick="AddUser">Add Test User</button>
+
+@code {
+    public async void AddUser()
+    {
+        User user = new User
+        {
+            Id = ObjectId.GenerateNewId(),
+            Username = "hi",
+            Password = "hi",
+            FirstName = "Peeper2",
+            LastName = "pig2",
+            ProfilePicture = "test",
+            Email = "coolguy@edu.neu",
+            PhoneNumber = "435"
+        };
+
+        await UserService.CreateUser(user);
+    }
+}

@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject IHashingService Hashing
+@inject IUserService UserService
 @using System.Text.RegularExpressions
 @using Clubies.Models
 @using Clubies.Services.Interfaces
@@ -55,26 +56,25 @@
 </div>
 
 @code {
-	public List<User> UserDataBase { get; set; } = new List<User>();
-	public User NewUser { get; set; } = new User() { IsRegistering = true };
-	public string usernameError = "";
-	public string firstNameError = "";
-	public string lastNameError = "";
-	public string emailError = "";
-	public string passwordError = "";
-	public string confirmPasswordError = "";
-	public string phoneError = "";
+    public User NewUser { get; set; } = new User() { IsRegistering = true };
+    public string usernameError = "";
+    public string firstNameError = "";
+    public string lastNameError = "";
+    public string emailError = "";
+    public string passwordError = "";
+    public string confirmPasswordError = "";
+    public string phoneError = "";
 
-	private void AddUser()
-	{
-		NewUser.Password = Hashing.GetHashString(NewUser.Password);
-		Console.WriteLine("Hashed password: " + NewUser.Password);
-		UserDataBase.Add(NewUser);
+    private async Task AddUser()
+    {
+        NewUser.Password = Hashing.GetHashString(NewUser.Password);
+        Console.WriteLine("Hashed password: " + NewUser.Password);
+        await UserService.CreateUser(NewUser);
         Console.WriteLine("Added User");
         Navigation.NavigateTo("/login");
     }
 
-    public void ValidateUser()
+    public async Task ValidateUser()
     {
         bool ValidUsername = !string.IsNullOrWhiteSpace(NewUser.Username);
         bool ValidFirstName = !string.IsNullOrWhiteSpace(NewUser.FirstName);
@@ -82,13 +82,13 @@
         bool ValidEmail = Regex.IsMatch(NewUser.Email, @"^\w+@(student\.)?neumont\.edu$");
         bool ValidPassword = ValidatePassword();
         bool validPhoneNumber = true;
-        bool UsernameIsFree = UserDataBase.Where(u => u.Username == NewUser.Username).FirstOrDefault() == null;
-        bool EmailIsFree = UserDataBase.Where(u => u.Email == NewUser.Email).FirstOrDefault() == null;
+        bool UsernameIsFree = await UserService.GetByUsername(NewUser.Username) == null;
+        bool EmailIsFree = await UserService.GetByUserEmail(NewUser.Email) == null;
         if (!string.IsNullOrWhiteSpace(NewUser.PhoneNumber))
             validPhoneNumber = Regex.IsMatch(NewUser.PhoneNumber, @"^(?=(?:\D*\d){7,15}\D*$)\+?[\d\s().-]+$");
 
         if (ValidUsername && ValidFirstName && ValidLastName && ValidEmail && ValidPassword && validPhoneNumber && UsernameIsFree)
-            AddUser();
+            await AddUser();
         else
             ShowErrors(ValidUsername, ValidFirstName, ValidLastName, ValidEmail, validPhoneNumber, UsernameIsFree);
     }

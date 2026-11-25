@@ -34,6 +34,8 @@ builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
 
 builder.Services.AddSingleton<MongoDbTestService>();
 
+builder.Services.AddSingleton<IHashingService, HashingService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IClubService, ClubService>();

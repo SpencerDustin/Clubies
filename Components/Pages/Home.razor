@@ -42,7 +42,7 @@
 }
 
 @*This is a button that only shows up for people who can create clubs*@
-@if (currUser!.PhoneNumber != null) @*Only shows up if User has verified Phone Number*@
+@if (!string.IsNullOrEmpty(currUser!.PhoneNumber)) @*Only shows up if User has verified Phone Number*@
 { 
     <div>
         <NavLink class="btn btn-secondary" href="create-club">
@@ -53,5 +53,5 @@
 }
 
 @code {
-    
+    User currUser = new User() { PhoneNumber = "555"};
 }

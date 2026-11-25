@@ -7,6 +7,16 @@
     padding-right: 10px;
 }
 
+.custom-input {
+    border: 2px solid #0078d4;
+    border-radius: 4px;
+    height: 125px;
+    width: 300px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    resize: none;
+}
+
 /*Default*/
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;

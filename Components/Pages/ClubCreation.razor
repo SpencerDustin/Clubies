@@ -1,0 +1,36 @@
+﻿@page "/create-club"
+
+@using Clubies.Models
+@using Clubies.Services.Interfaces
+
+@inject IClubService ClubService
+@inject IUserService UserService
+
+<h3>Club Creation</h3>
+
+
+<EditForm Model="NewClub" FormName="CreateClubForm" OnValidSubmit="CreateClub">
+    <DataAnnotationsValidator />
+
+    <InputText @bind-Value="NewClub.Name" placeholder="Name" autocomplete="off"></InputText>
+    <ValidationMessage For="() => NewClub.Name" />
+    <br />
+
+    <InputTextArea @bind-Value="NewClub.Description" class="custom-input" placeholder="Club Description" autocomplete="off"></InputTextArea>
+    <ValidationMessage For="() => NewClub.Description" />
+    <br />
+
+    <input type="submit" value="Create Club" />
+</EditForm>
+<br />
+
+@code {
+    private Club NewClub { get; set; } = new Club() ;
+    User pep = UserService.GetUserById();
+
+    private async void CreateClub()
+    {
+        await ClubService.CreateClubService(NewClub);
+        Console.WriteLine("Club Created!");
+    }
+}

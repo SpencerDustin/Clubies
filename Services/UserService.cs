@@ -3,6 +3,7 @@ using Clubies.Models;
 using Clubies.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Clubies.Services
 {
@@ -72,6 +73,17 @@ namespace Clubies.Services
 
             context.Users.Remove(user);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ValidateLogin(User user, string unHashedPassword)
+        {
+            HashingService hashingService = new HashingService();
+
+            unHashedPassword = hashingService.GetHashString(unHashedPassword);
+
+            bool validUser = user.Password == unHashedPassword;
+
+            return validUser;
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿@page "/"
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager Navigation
 @layout HomeLayout
 @using Clubies.Models
+@using Microsoft.AspNetCore.Components.Authorization
 
 <PageTitle>Home</PageTitle>
 
@@ -52,6 +53,20 @@
     <br/>
 }
 
+@if (username != null)
+{
+    <p>@username</p>
+}
+
 @code {
     User currUser = new User();
+    string? username;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        username = user.Identity?.Name;
+    }
 }

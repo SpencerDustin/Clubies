@@ -26,5 +26,6 @@ namespace Clubies.Services.Interfaces
 
         // DELETE
         public Task DeleteUser(User user);
+        public Task<bool> ValidateLogin(User user, string unHashedPassword);
     }
 }

@@ -1,5 +1,45 @@
-﻿<h3>Settings</h3>
+﻿@page "/settings"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject IUserService UserService
+@using Clubies.Models
+@using Clubies.Services.Interfaces
+
+<h3>Settings</h3>
+
+<div class="settings-options">
+	<button class="settings-card" @onclick="ChangeUsername">Change Username</button>
+	<button class="settings-card" @onclick="ChangePhone">Add Or Change Phone Number</button>
+	<button class="settings-card" @onclick="ChangePassword">Change Password</button>
+	<button class="settings-card" @onclick="Logout">Logout</button>
+	<button class="settings-card" @onclick="DeleteAccount">Delete Account</button>
+</div>
 
 @code {
+	User tempCurrentUser = new User() { Username = "PepMaster007", Password = "8744AE43E5DAE0ACD05CA1F2C309852D49DEF638036F86D092CA431FA52B9BCA" };
 
+	public async Task ChangeUsername()
+	{
+		Navigation.NavigateTo("/settings/change-info/username");
+	}
+
+	public async Task ChangePhone()
+	{
+		Navigation.NavigateTo("/settings/change-info/phone-number");
+	}
+
+	public async Task ChangePassword()
+	{
+		Navigation.NavigateTo("/settings/change-info/password");
+	}
+
+	public async Task Logout()
+	{
+		Navigation.NavigateTo("/login");
+	}
+
+	public async Task DeleteAccount()
+	{
+		Navigation.NavigateTo("/login");
+	}
 }

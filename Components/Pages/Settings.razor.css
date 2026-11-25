@@ -1,0 +1,17 @@
+/* CSS for Settings component */
+.settings-options{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.settings-card{
+    justify-content: center;
+    background-color: grey;
+    border-radius: 5px;
+    width: 400px;
+    max-width: 400px;
+    height: 200px;
+    max-height: 200px;
+    margin: 10px;
+    font-size: 70px;
+}

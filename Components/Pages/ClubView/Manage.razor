@@ -38,6 +38,10 @@ else
 
     <div class="club-buttons">
 
+        <button class="manager-buttons" @onclick="AddEvent">Add Event</button>
+
+        <button class="manager-buttons" @onclick="AddAnnouncement">Add Announcement</button>
+
         <button class="club-buttons-indivdual" @onclick="ViewMembers">View Members</button>
 
         <button class="club-buttons-indivdual" @onclick="ViewManagers">View Managers</button>
@@ -45,6 +49,8 @@ else
         <button class="club-buttons-indivdual" @onclick="ViewEvents">View Events</button>
 
         <button class="club-buttons-indivdual" @onclick="ViewAnnouncements">View Announcements</button>
+
+        <button class="remove-button" @onclick="ViewRemoveMember">Remove Member</button>
 
     </div>
 
@@ -57,6 +63,24 @@ else
             @foreach (ObjectId member in Club.Members)
             {
                 <p>@member</p>
+            }
+        }
+        else
+        {
+            <p>No Members Found</p>
+        }
+    }
+
+    @if (ShowRemoveMember)
+    {
+        <h3>Remove Club Members</h3>
+
+        @if (Club.Members != null && Club.Members.Count > 0)
+        {
+            @foreach (ObjectId member in Club.Members)
+            {
+                <p>@member</p>
+                <button class="remove-button" @onclick="() => RemoveMember(member)">X</button>
             }
         }
         else
@@ -128,6 +152,8 @@ else
 
     public bool ShowAnnouncements { get; set; } = false;
 
+    public bool ShowRemoveMember { get; set; } = false;
+
     protected override void OnInitialized()
     {
         Club = new Club()
@@ -144,12 +170,37 @@ else
 
     }
 
+    private void AddEvent()
+    {
+
+    }
+
+    private void AddAnnouncement()
+    {
+
+    }
+
+    private void RemoveMember(ObjectId member)
+    {
+        Club?.Members?.Remove(member);
+    }
+
+    private void ViewRemoveMember()
+    {
+        ShowMembers = false;
+        ShowManagers = false;
+        ShowEvents = false;
+        ShowAnnouncements = false;
+        ShowRemoveMember = true;
+    }
+
     private void ViewMembers()
     {
         ShowMembers = true;
         ShowManagers = false;
         ShowEvents = false;
         ShowAnnouncements = false;
+        ShowRemoveMember = false;
     }
 
     private void ViewManagers()
@@ -158,6 +209,8 @@ else
         ShowManagers = true;
         ShowEvents = false;
         ShowAnnouncements = false;
+        ShowRemoveMember = false;
+
     }
 
     private void ViewEvents()
@@ -166,6 +219,8 @@ else
         ShowManagers = false;
         ShowEvents = true;
         ShowAnnouncements = false;
+        ShowRemoveMember = false;
+
     }
 
     private void ViewAnnouncements()
@@ -174,6 +229,8 @@ else
         ShowManagers = false;
         ShowEvents = false;
         ShowAnnouncements = true;
+        ShowRemoveMember = false;
+
     }
 
 

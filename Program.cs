@@ -39,6 +39,7 @@ builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IClubService, ClubService>();
 builder.Services.AddScoped<IClubEventService, ClubEventService>();
 builder.Services.AddScoped<IChannelService, ChannelService>();
+builder.Services.AddScoped<IClubAuthorityService, ClubAuthorityService>();
 
 builder.Services.AddDbContextFactory<MongoDbContext>(options =>
 {

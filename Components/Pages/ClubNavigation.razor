@@ -1,0 +1,22 @@
+﻿@using Clubies.Models
+@using Clubies.Services.Interfaces
+@using MongoDB.Bson
+@inject IClubAuthorityService ClubAuthority
+@inject NavigationManager Navigation
+
+<button @onclick="ViewClub">View Club</button>
+
+@code {
+    [Parameter]
+    public Club Club { get; set; } = null;
+
+    [Parameter]
+    public ObjectId UserId { get; set; }
+
+    private void ViewClub()
+    {
+        string destination = ClubAuthority.GetUserClubPage(Club, UserId);
+
+        Navigation.NavigateTo(destination);
+    }
+}

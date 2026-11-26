@@ -1,0 +1,89 @@
+﻿@page "/settings/change-info/{thingToChange}"
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+@inject IUserService UserService
+@inject IHashingService Hashing
+@using Clubies.Services.Interfaces
+
+<h3>ChangeInfo</h3>
+<InputText @bind-Value="NewChange">@BoxInfo</InputText>
+@if (ThingToChange == "username")
+{
+	@(BoxInfo = "New Username")
+	<br />
+	<button @onclick="ChangeUsername">Change Username</button>
+}
+else if (ThingToChange == "phone-number")
+{
+	@(BoxInfo = "New Phone Number")
+	<br />
+	<button @onclick="ChangePhoneNumber">Change Phone Number</button>
+}
+else if (ThingToChange == "password")
+{
+	@(BoxInfo = "New Password")
+	<br />
+	<button @onclick="ChangePassword">Change Password</button>
+}
+
+@code 
+{
+	[Parameter]
+	public string? ThingToChange { get; set; }
+	public string BoxInfo { get; set; }
+	public string NewChange { get; set; }
+	public string MethodToCall { get; set; }
+
+	public async Task ChangeUsername()
+	{
+		if (ValidateUsername())
+		{
+			User updatedUser = await UserService.GetByUserId(new MongoDB.Bson.ObjectId("6b064a443569b06b9dfef23a"));
+			updatedUser.Username = NewChange;
+			await UserService.UpdateUser(updatedUser);
+			PostUpdate();
+		}
+	}
+
+	private bool ValidateUsername()
+	{
+		return true;
+	}
+
+	public async Task ChangePhoneNumber()
+	{
+		if (ValidatePhoneNumber())
+		{
+			User updatedUser = await UserService.GetByUserId(new MongoDB.Bson.ObjectId("6b064a443569b06b9dfef23a"));
+			updatedUser.PhoneNumber = NewChange;
+			await UserService.UpdateUser(updatedUser);
+			PostUpdate();
+		}
+	}
+
+	private bool ValidatePhoneNumber()
+	{
+		return true;
+	}
+
+	public async Task ChangePassword()
+	{
+		if (ValidatePassword())
+		{
+			User updatedUser = await UserService.GetByUserId(new MongoDB.Bson.ObjectId("6b064a443569b06b9dfef23a"));
+			updatedUser.Password = Hashing.GetHashString(NewChange);
+			await UserService.UpdateUser(updatedUser);
+			PostUpdate();
+		}
+	}
+
+	private bool ValidatePassword()
+	{
+		return true;
+	}
+
+	private void PostUpdate()
+	{
+		Navigation.NavigateTo("/settings");
+	}
+}

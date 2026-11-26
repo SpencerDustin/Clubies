@@ -40,6 +40,8 @@
 
 	public async Task DeleteAccount()
 	{
+		User currUser = await UserService.GetByUsername(tempCurrentUser.Username);
+		await UserService.DeleteUser(currUser);
 		Navigation.NavigateTo("/login");
 	}
 }

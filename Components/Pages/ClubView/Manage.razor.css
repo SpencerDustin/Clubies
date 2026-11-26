@@ -68,7 +68,35 @@
     font-weight: bold;
 }
 
-.club-join-button:hover {
+.club-buttons-indivdual:hover {
     background-color: #084d91;
+}
+
+.manager-buttons {
+    background-color: green;
+    color: black;
+    border: 2px solid;
+    border-block-color: black;
+    padding: 15px 25px;
+    font-weight: bold;
+}
+
+    .manager-buttons:hover {
+        background-color: #084d91;
+    }
+
+.remove-button {
+    background-color: red;
+    color: white;
+    border: 2px solid;
+    border-block-color: black;
+    border-right-color:black;
+    border-left-color:black;
+    padding: 15px 25px;
+    font-weight: bold;
+}
+
+.remove-buttons:hover {
+    background-color: darkred;
 }
 

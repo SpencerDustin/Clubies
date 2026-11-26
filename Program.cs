@@ -4,6 +4,12 @@ using Clubies.Services;
 using Clubies.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Clubies.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
+using Clubies.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +40,8 @@ builder.Services.AddSingleton<IMongoDatabase>(serviceProvider =>
 
 builder.Services.AddSingleton<MongoDbTestService>();
 
+builder.Services.AddSingleton<IHashingService, HashingService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IClubService, ClubService>();
@@ -50,7 +58,44 @@ builder.Services.AddDbContextFactory<MongoDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Adding cookies authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
+// Using authentication for cookies
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/login", async ([FromForm] String username, [FromForm] String password, IUserService userService, HttpContext context) =>
+{
+    User? user = await userService.GetByUsername(username);
+
+    if (user == null || !await userService.ValidateLogin(user, password))
+        return Results.Redirect("/login?failed=true");
+
+    var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.Username)
+    };
+
+    // Authenticated identity
+    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+    var principal = new ClaimsPrincipal(identity);
+
+    await context.SignInAsync(
+        CookieAuthenticationDefaults.AuthenticationScheme,
+        principal);
+
+    return Results.Redirect("/");
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -15,10 +15,17 @@ namespace Clubies.Services.Interfaces
         // READ BY ID
         public Task<User?> GetByUserId(ObjectId id);
 
+        // READ BY USERNAME
+        public Task<User?> GetByUsername(string username);
+
+        // READ BY EMAIL
+        public Task<User?> GetByUserEmail(string email);
+
         // UPDATE
         public Task UpdateUser(User user);
 
         // DELETE
         public Task DeleteUser(User user);
+        public Task<bool> ValidateLogin(User user, string unHashedPassword);
     }
 }

@@ -3,6 +3,7 @@ using Clubies.Models;
 using Clubies.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Clubies.Services
 {
@@ -40,6 +41,22 @@ namespace Clubies.Services
             return await context.Users.FindAsync(id);
         }
 
+        // READ BY USERNAME
+        public async Task<User?> GetByUsername(string username)
+        {
+            using var context = contextFactory.CreateDbContext();
+
+            return await context.Users.Where(u => u.Username == username).SingleOrDefaultAsync();
+        }
+
+        // READ BY EMAIL
+        public async Task<User?> GetByUserEmail(string email)
+        {
+            using var context = contextFactory.CreateDbContext();
+
+            return await context.Users.Where(u => u.Email == email).SingleOrDefaultAsync();
+        }
+
         // UPDATE
         public async Task UpdateUser(User user)
         {
@@ -56,6 +73,17 @@ namespace Clubies.Services
 
             context.Users.Remove(user);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ValidateLogin(User user, string unHashedPassword)
+        {
+            HashingService hashingService = new HashingService();
+
+            unHashedPassword = hashingService.GetHashString(unHashedPassword);
+
+            bool validUser = user.Password == unHashedPassword;
+
+            return validUser;
         }
     }
 }
